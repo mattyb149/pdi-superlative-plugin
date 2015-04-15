@@ -58,7 +58,7 @@ public class SuperlativeFilterMeta extends BaseStepMeta implements StepMetaInter
 
   private String valueFieldName = null;
 
-  private long numRowsToSave = 0;
+  private String numRowsToSave = null;
 
   public FilterType filterType;
 
@@ -92,9 +92,9 @@ public class SuperlativeFilterMeta extends BaseStepMeta implements StepMetaInter
   private void readData( Node stepnode ) throws KettleXMLException {
     try {
       setValueFieldName( XMLHandler.getTagValue( stepnode, "valuefield" ) );
-      int numRows = 0;
+      String numRows = "0";
       try {
-        numRows = Integer.parseInt( XMLHandler.getTagValue( stepnode, "rows" ) );
+        numRows = XMLHandler.getTagValue( stepnode, "rows" );
       } catch ( NumberFormatException nfe ) {
       }
       setNumRowsToSave( numRows );
@@ -108,7 +108,7 @@ public class SuperlativeFilterMeta extends BaseStepMeta implements StepMetaInter
   @Override
   public void setDefault() {
     setValueFieldName( null );
-    setNumRowsToSave( -1 );
+    setNumRowsToSave( null );
     setFilterType( FilterType.Top );
   }
 
@@ -117,7 +117,7 @@ public class SuperlativeFilterMeta extends BaseStepMeta implements StepMetaInter
     throws KettleException {
     try {
       setValueFieldName( rep.getStepAttributeString( id_step, "valuefield" ) );
-      setNumRowsToSave( rep.getStepAttributeInteger( id_step, "rows" ) );
+      setNumRowsToSave( rep.getStepAttributeString( id_step, "rows" ) );
       setFilterType( FilterType.valueOf( rep.getStepAttributeString( id_step, "filter" ) ) );
 
     } catch ( Exception e ) {
@@ -195,12 +195,12 @@ public class SuperlativeFilterMeta extends BaseStepMeta implements StepMetaInter
     this.valueFieldName = valueFieldName;
   }
 
-  public long getNumRowsToSave() {
+  public String getNumRowsToSave() {
     return numRowsToSave;
   }
 
-  public void setNumRowsToSave( long l ) {
-    this.numRowsToSave = l;
+  public void setNumRowsToSave( String numRowsToSave ) {
+    this.numRowsToSave = numRowsToSave;
   }
 
   public FilterType getFilterType() {

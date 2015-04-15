@@ -320,7 +320,7 @@ public class SuperlativeFilterDialog extends BaseStepDialog implements StepDialo
       wValueField.setText( input.getValueFieldName() );
     }
 
-    wNumRowsToSave.setText( Long.toString( Math.max( input.getNumRowsToSave(), 0 ) ) );
+    wNumRowsToSave.setText(  Const.NVL( input.getNumRowsToSave(), "" ) );
 
     FilterType filterType = input.getFilterType();
 
@@ -345,7 +345,7 @@ public class SuperlativeFilterDialog extends BaseStepDialog implements StepDialo
 
     stepname = wStepname.getText(); // return value
     input.setValueFieldName( wValueField.getText() );
-    input.setNumRowsToSave( Integer.parseInt( wNumRowsToSave.getText() ) );
+    input.setNumRowsToSave( wNumRowsToSave.getText() );
 
     if ( radioBottom.getSelection() ) {
       input.setFilterType( FilterType.Bottom );

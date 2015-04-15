@@ -6,11 +6,13 @@ apply plugin: 'idea'
 // ensure maximum supportability and compatibility for your plugin.
 sourceCompatibility = JavaVersion.VERSION_1_6
 
+version = '1.1'
+
 // External property (deprecated in Gradle 2.x) for Kettle and metastore versions. If you wish to 
 // put your plugin in the Marketplace against the current revision (say, 5.0.x), use the latest
 // release tag
-project.ext.kettle_dependency_revision = '5.0-SNAPSHOT'
-project.ext.metastore_dependency_revision = '5.0-SNAPSHOT'
+project.ext.kettle_dependency_revision = '5.2.0.1-218'
+project.ext.metastore_dependency_revision = '5.2.0.1-218'
 
 // This adds the Pentaho repositories and Maven Central. The official list of repos is currently
 // kept in GitHub at pentaho/subfloor/master-copies/ivysettings.xml, but if we move to Maven

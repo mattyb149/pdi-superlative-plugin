@@ -57,6 +57,8 @@ public class SuperlativeFilter extends BaseStep implements StepInterface {
 
   private boolean topFilter, bottomFilter, firstFilter, lastFilter;
 
+  private int numRowsToSave = 0;
+
   public SuperlativeFilter( StepMeta stepMeta, StepDataInterface stepDataInterface, int copyNr, TransMeta transMeta,
       Trans trans ) {
     super( stepMeta, stepDataInterface, copyNr, transMeta, trans );
@@ -91,10 +93,18 @@ public class SuperlativeFilter extends BaseStep implements StepInterface {
       bottomFilter = FilterType.Bottom.equals( metaFilterType );
       firstFilter = FilterType.First.equals( metaFilterType );
       lastFilter = FilterType.Last.equals( metaFilterType );
+      numRowsToSave = 0;
+      String numRowsString = environmentSubstitute( meta.getNumRowsToSave() );
+      try {
+        numRowsToSave = Integer.parseInt( numRowsString );
+      }
+      catch( NumberFormatException nfe ) {
+        throw new KettleException( "Couldn't determine number of rows to save from value: " + numRowsString );
+      }
 
       if ( topFilter || bottomFilter ) {
         rowComparator = new RowValueMetaComparator( valueFieldType, valueIndex, topFilter );
-        rowQ = MinMaxPriorityQueue.orderedBy( rowComparator ).expectedSize( (int) meta.getNumRowsToSave() ).create();
+        rowQ = MinMaxPriorityQueue.orderedBy( rowComparator ).expectedSize( numRowsToSave ).create();
       } else if ( firstFilter || lastFilter ) {
         rowQ = new LinkedList<Object[]>();
       } else
@@ -109,7 +119,7 @@ public class SuperlativeFilter extends BaseStep implements StepInterface {
     }
 
     // Determine whether to save row
-    if ( ( rowQ.size() < meta.getNumRowsToSave() ) || firstFilter || lastFilter ) {
+    if ( ( rowQ.size() < numRowsToSave ) || firstFilter || lastFilter ) {
       rowQ.add( r );
     } else {
       Object[] head = rowQ.peek();
@@ -120,11 +130,11 @@ public class SuperlativeFilter extends BaseStep implements StepInterface {
     }
 
     // If we're returning the first N rows and we have N rows, we're done!
-    if ( firstFilter && ( rowQ.size() == meta.getNumRowsToSave() ) ) {
+    if ( firstFilter && ( rowQ.size() == numRowsToSave ) ) {
       return putQueue( false );
     }
 
-    if ( rowQ.size() > meta.getNumRowsToSave() ) {
+    if ( rowQ.size() > numRowsToSave ) {
       rowQ.poll();
     }
 
